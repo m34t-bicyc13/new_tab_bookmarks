@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "New Tab Bookmarks",
+  "version": "1.0",
+  "description": "Визуализация закладок в удобном виде",
+  "permissions": ["bookmarks", "storage"],
+  "background": {
+    "service_worker": "src/service/background_service.js"
+  },
+  "chrome_url_overrides": {
+    "newtab": "dist/index.html"
+  }
+}
