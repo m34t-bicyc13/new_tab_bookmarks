@@ -8,6 +8,6 @@
     "service_worker": "src/service/background_service.js"
   },
   "chrome_url_overrides": {
-    "newtab": "dist/index.html"
+    "newtab": "build/index.html"
   }
 }

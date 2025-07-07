@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [vue()],
   base: "./",
   build: {
+    outDir: "build",
     rollupOptions: {
       output: {
         entryFileNames: "assets/[name].js",
