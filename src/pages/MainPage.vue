@@ -1,13 +1,13 @@
 ﻿<template>
   <div class="_main_container">
-    <SearchComponent />
-    <BookmarksComponent />
+    <Search />
+    <BookmarksContainer />
   </div>
 </template>
 
 <script setup lang="ts">
-import SearchComponent from "../components/SearchComponent.vue";
-import BookmarksComponent from "../components/BookmarksComponent.vue";
+import Search from "../components/Search.vue";
+import BookmarksContainer from "../components/BookmarksContainer.vue";
 </script>
 
 <style scoped>

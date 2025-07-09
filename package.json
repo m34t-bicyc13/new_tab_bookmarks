@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/chrome": "^0.0.329",
+    "@vicons/material": "^0.13.0",
     "vue": "^3.5.17"
   },
   "devDependencies": {
