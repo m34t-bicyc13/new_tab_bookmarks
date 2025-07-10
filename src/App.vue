@@ -17,12 +17,17 @@ const themeOverrides: GlobalThemeOverrides = {
     primaryColor: "#8350f9",
     primaryColorHover: "#8350f9",
     primaryColorPressed: "none",
-    borderRadius: "100px",
   },
   Button: {
     border: "1px solid #e0e0e6",
     borderHover: "1px solid #8350f9",
     borderFocus: "1px solid #8350f9",
+  },
+  Input: {
+    border: "1px solid #e0e0e6",
+    borderHover: "1px solid #8350f9",
+    borderFocus: "1px solid #8350f9",
+    borderRadius: "100px",
   },
 };
 </script>

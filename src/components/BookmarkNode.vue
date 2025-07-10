@@ -4,28 +4,47 @@
 
     <!-- Сначала отрисовываем ссылки -->
     <div v-if="bookmarks.length" class="_bookmark_grid">
-      <a
+      <div
         v-for="bookmark in bookmarks"
-        class="_bookmark_card"
+        class="_bookmark_wrapper"
         :key="bookmark.id"
-        :href="bookmark.url"
-        rel="noopener noreferrer"
       >
-        <span class="_bookmark_favicon">
-          <img
-            :src="getFaviconUrl(String(bookmark.url))"
-            alt="favicon"
-            loading="lazy"
-            width="20"
-            height="20"
-          />
-        </span>
-        <h3>{{ bookmark.title }}</h3>
-      </a>
+        <a
+          class="_bookmark_card"
+          :href="bookmark.url"
+          rel="noopener noreferrer"
+        >
+          <span class="_bookmark_favicon">
+            <img
+              :src="getFaviconUrl(String(bookmark.url))"
+              alt="favicon"
+              loading="lazy"
+              width="20"
+              height="20"
+            />
+          </span>
+          <h3>{{ bookmark.title }}</h3>
+        </a>
+        <NButton
+          v-if="editMode"
+          class="_bookmark_edit_button"
+          type="primary"
+          circle
+          size="tiny"
+          @click="handleEditClick(bookmark)"
+          >✎
+        </NButton>
+      </div>
     </div>
 
     <!-- Затем вложенные папки -->
-    <BookmarkNode v-for="child in folders" :key="child.id" :node="child" />
+    <BookmarkNode
+      v-for="child in folders"
+      :key="child.id"
+      :node="child"
+      :editMode="editMode"
+      @edit-bookmark="$emit('edit-bookmark', $event)"
+    />
   </div>
   <!-- Продолжаем рекурсивный поиск -->
   <BookmarkNode
@@ -34,19 +53,23 @@
     :key="child.id"
     :node="child"
     :targetTitle="targetTitle"
+    :editMode="editMode"
+    @edit-bookmark="$emit('edit-bookmark', $event)"
   />
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
+import { NButton } from "naive-ui";
 import type { BookmarkTreeNode } from "../types/commonTypes";
 
 const props = defineProps<{
   node: BookmarkTreeNode;
   targetTitle?: string;
+  editMode?: boolean;
 }>();
 
-//const isFolder = computed(() => props.node.children?.length);
+const emit = defineEmits(["edit-bookmark"]);
 
 const isTargetFolder = computed(() =>
   props.targetTitle ? props.node.title === props.targetTitle : true
@@ -60,7 +83,6 @@ const folders = computed(
   () => props.node.children?.filter((n: BookmarkTreeNode) => !n.url) ?? []
 );
 
-// Получение favicon через Google API
 function getFaviconUrl(url: string) {
   try {
     const { hostname } = new URL(url);
@@ -68,6 +90,14 @@ function getFaviconUrl(url: string) {
   } catch {
     return "";
   }
+}
+
+function handleEditClick(bookmark: BookmarkTreeNode) {
+  emit("edit-bookmark", {
+    id: bookmark.id,
+    title: bookmark.title || "",
+    url: bookmark.url || "",
+  });
 }
 </script>
 
@@ -103,6 +133,10 @@ function getFaviconUrl(url: string) {
   flex-direction: row;
   flex-wrap: wrap;
   gap: 15px;
+}
+
+._bookmark_wrapper {
+  position: relative;
 }
 
 ._bookmark_card {
@@ -147,5 +181,17 @@ function getFaviconUrl(url: string) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+._bookmark_edit_button {
+  position: absolute;
+  bottom: 0;
+  right: -5px;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+  font-size: 12px;
+  transform: scaleX(-1);
 }
 </style>
