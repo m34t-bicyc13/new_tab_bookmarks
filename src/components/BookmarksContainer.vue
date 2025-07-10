@@ -3,11 +3,11 @@
     <BookmarkNode v-for="node in bookmarksData" :key="node.id" :node="node" targetTitle="Dashboard" />
   </div>
 
-  <n-alert v-else-if="errorMessage" type="error">
+  <NAlert v-else-if="errorMessage" type="error">
     {{ errorMessage }}
-  </n-alert>
+  </NAlert>
 
-  <n-spin v-else></n-spin>
+  <NSpin v-else></NSpin>
 </template>
 
 <script setup lang="ts">
