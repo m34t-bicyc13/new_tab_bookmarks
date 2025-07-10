@@ -1,6 +1,6 @@
 ﻿<template>
   <div v-if="bookmarksData" class="_bookmarks_container">
-    <BookmarkNode v-for="node in bookmarksData" :key="node.id" :node="node" />
+    <BookmarkNode v-for="node in bookmarksData" :key="node.id" :node="node" targetTitle="Dashboard" />
   </div>
 
   <n-alert v-else-if="errorMessage" type="error">

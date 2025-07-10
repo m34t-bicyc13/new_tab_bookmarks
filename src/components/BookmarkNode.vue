@@ -1,5 +1,5 @@
 ﻿<template>
-  <div v-if="isFolder" class="_folder">
+  <div v-if="isTargetFolder" class="_folder">
     <div class="_folder_title">{{ node.title }}</div>
 
     <!-- Сначала отрисовываем ссылки -->
@@ -11,24 +11,40 @@
         :href="bookmark.url"
         rel="noopener noreferrer"
       >
-        {{ bookmark.title }}
+        <NIcon><BookmarkFilled /></NIcon>
+        <h3>{{ bookmark.title }}</h3>
       </a>
     </div>
 
     <!-- Затем вложенные папки -->
     <BookmarkNode v-for="child in folders" :key="child.id" :node="child" />
   </div>
+  <!-- Продолжаем рекурсивный поиск -->
+  <BookmarkNode
+    v-else-if="folders.length"
+    v-for="child in folders"
+    :key="child.id"
+    :node="child"
+    :targetTitle="targetTitle"
+  />
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
+import { NIcon } from "naive-ui";
+import { BookmarkFilled } from "@vicons/material";
 import type { BookmarkTreeNode } from "../types/commonTypes";
 
 const props = defineProps<{
   node: BookmarkTreeNode;
+  targetTitle?: string;
 }>();
 
-const isFolder = computed(() => props.node.children?.length);
+//const isFolder = computed(() => props.node.children?.length);
+
+const isTargetFolder = computed(() =>
+  props.targetTitle ? props.node.title === props.targetTitle : true
+);
 
 const bookmarks = computed(
   () => props.node.children?.filter((n: BookmarkTreeNode) => n.url) ?? []
@@ -87,5 +103,20 @@ const folders = computed(
   transition: box-shadow 0.2s;
   gap: 12px;
   overflow: hidden;
+}
+
+._bookmark_card:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+  background-color: #334158;
+}
+
+._bookmark_card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+  color: #a0aec0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
