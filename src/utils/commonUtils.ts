@@ -25,6 +25,16 @@ export const setCustomIcon = (
   });
 };
 
+// Получить URL иконки для закладки
+export const getFaviconUrl = (url: string) => {
+  try {
+    const { hostname } = new URL(url);
+    return `https://www.google.com/s2/favicons?domain=${hostname}&sz=32`;
+  } catch {
+    return "";
+  }
+}
+
 // Функция для обновления закладок иконками
 export const updateBookmarksWithIcons = (
   bookmarks: BookmarkTreeNode[],

@@ -13,34 +13,13 @@
       @edit-bookmark="openEditModal"
     />
 
-    <NModal v-model:show="showEditModal">
-      <NCard
-        style="width: 800px"
-        title="Изменение закладки"
-        :bordered="false"
-        role="dialog"
-        aria-modal="true"
-      >
-        <NForm>
-          <NFormItem label="Название">
-            <NInput v-model:value="editingBookmark.title" placeholder="Example"/>
-          </NFormItem>
-          <NFormItem label="Ссылка">
-            <NInput v-model:value="editingBookmark.url" placeholder="https://example.com" />
-          </NFormItem>
-          <NFormItem label="Иконка">
-            <NInput v-model:value="editingBookmark.iconUrl" placeholder="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/svg/icon_name.svg"/>
-          </NFormItem>
-        </NForm>
-
-        <template #footer>
-          <NSpace justify="end">
-            <NButton @click="showEditModal = false">Отмена</NButton>
-            <NButton type="primary" @click="saveBookmark">Сохранить</NButton>
-          </NSpace>
-        </template>
-      </NCard>
-    </NModal>
+    <EditBookmarkModal
+      :bookmark="editingBookmark"
+      :show="showEditModal"
+      @update:show="showEditModal = $event"
+      @save="handleSaveBookmark"
+      @cancel="showEditModal = false"
+    />
   </div>
 
   <NAlert v-else-if="errorMessage" type="error">
@@ -51,31 +30,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import {
-  NSpin,
-  NAlert,
-  NButton,
-  NModal,
-  NCard,
-  NForm,
-  NFormItem,
-  NInput,
-  NSpace,
-} from "naive-ui";
+import { ref } from "vue";
+import { NSpin, NAlert, NButton } from "naive-ui";
 import BookmarkNode from "./BookmarkNode.vue";
+import EditBookmarkModal from "./EditBookmarkModal.vue";
 import type { BookmarkTreeNode, BookmarkEdit } from "../types/commonTypes";
-import {
-  getCustomIcons,
-  setCustomIcon,
-  updateBookmarksWithIcons,
-} from "../utils/commonUtils";
+import { useBookmarks } from "../utils/useBookmarks";
 
-const bookmarksData = ref<BookmarkTreeNode[] | null>(null);
-const errorMessage = ref("");
+const { bookmarksData, errorMessage, saveBookmark } = useBookmarks();
+
 const editMode = ref(false);
 const showEditModal = ref(false);
-const customIcons = ref<{ [key: string]: string }>({});
 const editingBookmark = ref<BookmarkEdit>({
   id: "",
   title: "",
@@ -92,29 +57,11 @@ const openEditModal = (bookmark: BookmarkEdit) => {
   showEditModal.value = true;
 };
 
-const saveBookmark = () => {
-  // Here you would typically send an update to chrome.bookmarks API
-  chrome.bookmarks.update(
-    editingBookmark.value.id,
-    {
-      title: editingBookmark.value.title,
-      url: editingBookmark.value.url,
-    },
-    (updatedNode) => {
-      setCustomIcon(
-        editingBookmark.value.id,
-        editingBookmark.value.iconUrl ?? "",
-        () => {
-          // Update local state
-          updateBookmarkInTree(bookmarksData.value, {
-            ...updatedNode,
-            iconUrl: editingBookmark.value.iconUrl,
-          });
-          showEditModal.value = false;
-        }
-      );
-    }
-  );
+const handleSaveBookmark = (bookmark: BookmarkEdit) => {
+  saveBookmark(bookmark, (updatedNode) => {
+    updateBookmarkInTree(bookmarksData.value, updatedNode);
+    showEditModal.value = false;
+  });
 };
 
 const updateBookmarkInTree = (
@@ -125,7 +72,6 @@ const updateBookmarkInTree = (
 
   for (let i = 0; i < nodes.length; i++) {
     if (nodes[i].id === updatedNode.id) {
-      // Обновляем все свойства, включая icon
       nodes[i] = { ...updatedNode };
       return;
     }
@@ -134,29 +80,6 @@ const updateBookmarkInTree = (
     }
   }
 };
-
-onMounted(() => {
-  // Загружаем закладки
-  chrome.runtime.sendMessage({ action: "getBookmarks" }, (response) => {
-    if (response?.data) {
-      try {
-        const bookmarks: BookmarkTreeNode[] = JSON.parse(response.data);
-
-        // Загружаем иконки и после этого рендерим
-        getCustomIcons((icons) => {
-          customIcons.value = icons;
-          // Обновляем иконки в bookmarksData
-          updateBookmarksWithIcons(bookmarks, icons);
-          bookmarksData.value = bookmarks;
-        });
-      } catch (e) {
-        errorMessage.value = "Ошибка при парсинге данных.";
-      }
-    } else {
-      errorMessage.value = "Не удалось получить закладки.";
-    }
-  });
-});
 </script>
 
 <style scoped>
@@ -173,6 +96,6 @@ onMounted(() => {
 
 ._bookmarks_container {
   position: relative;
-  padding-bottom: 60px; /* Space for edit button */
+  padding-bottom: 60px;
 }
 </style>
