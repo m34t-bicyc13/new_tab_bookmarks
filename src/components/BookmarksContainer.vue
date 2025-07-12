@@ -23,10 +23,13 @@
       >
         <NForm>
           <NFormItem label="Название">
-            <NInput v-model:value="editingBookmark.title" />
+            <NInput v-model:value="editingBookmark.title" placeholder="Example"/>
           </NFormItem>
-          <NFormItem label="URL">
-            <NInput v-model:value="editingBookmark.url" />
+          <NFormItem label="Ссылка">
+            <NInput v-model:value="editingBookmark.url" placeholder="https://example.com" />
+          </NFormItem>
+          <NFormItem label="Иконка">
+            <NInput v-model:value="editingBookmark.iconUrl" placeholder="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/svg/icon_name.svg"/>
           </NFormItem>
         </NForm>
 
@@ -61,27 +64,30 @@ import {
   NSpace,
 } from "naive-ui";
 import BookmarkNode from "./BookmarkNode.vue";
-import type { BookmarkTreeNode } from "../types/commonTypes";
+import type { BookmarkTreeNode, BookmarkEdit } from "../types/commonTypes";
+import {
+  getCustomIcons,
+  setCustomIcon,
+  updateBookmarksWithIcons,
+} from "../utils/commonUtils";
 
 const bookmarksData = ref<BookmarkTreeNode[] | null>(null);
 const errorMessage = ref("");
 const editMode = ref(false);
 const showEditModal = ref(false);
-const editingBookmark = ref<{ id: string; title: string; url: string }>({
+const customIcons = ref<{ [key: string]: string }>({});
+const editingBookmark = ref<BookmarkEdit>({
   id: "",
   title: "",
   url: "",
+  iconUrl: "",
 });
 
 const toggleEditMode = () => {
   editMode.value = !editMode.value;
 };
 
-const openEditModal = (bookmark: {
-  id: string;
-  title: string;
-  url: string;
-}) => {
+const openEditModal = (bookmark: BookmarkEdit) => {
   editingBookmark.value = { ...bookmark };
   showEditModal.value = true;
 };
@@ -95,9 +101,18 @@ const saveBookmark = () => {
       url: editingBookmark.value.url,
     },
     (updatedNode) => {
-      // Update local state
-      updateBookmarkInTree(bookmarksData.value, updatedNode);
-      showEditModal.value = false;
+      setCustomIcon(
+        editingBookmark.value.id,
+        editingBookmark.value.iconUrl ?? "",
+        () => {
+          // Update local state
+          updateBookmarkInTree(bookmarksData.value, {
+            ...updatedNode,
+            iconUrl: editingBookmark.value.iconUrl,
+          });
+          showEditModal.value = false;
+        }
+      );
     }
   );
 };
@@ -110,7 +125,8 @@ const updateBookmarkInTree = (
 
   for (let i = 0; i < nodes.length; i++) {
     if (nodes[i].id === updatedNode.id) {
-      nodes[i] = updatedNode;
+      // Обновляем все свойства, включая icon
+      nodes[i] = { ...updatedNode };
       return;
     }
     if (nodes[i].children) {
@@ -120,11 +136,19 @@ const updateBookmarkInTree = (
 };
 
 onMounted(() => {
+  // Загружаем закладки
   chrome.runtime.sendMessage({ action: "getBookmarks" }, (response) => {
     if (response?.data) {
       try {
         const bookmarks: BookmarkTreeNode[] = JSON.parse(response.data);
-        bookmarksData.value = bookmarks;
+
+        // Загружаем иконки и после этого рендерим
+        getCustomIcons((icons) => {
+          customIcons.value = icons;
+          // Обновляем иконки в bookmarksData
+          updateBookmarksWithIcons(bookmarks, icons);
+          bookmarksData.value = bookmarks;
+        });
       } catch (e) {
         errorMessage.value = "Ошибка при парсинге данных.";
       }

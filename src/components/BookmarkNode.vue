@@ -16,7 +16,7 @@
         >
           <span class="_bookmark_favicon">
             <img
-              :src="getFaviconUrl(String(bookmark.url))"
+              :src="bookmark.iconUrl || getFaviconUrl(String(bookmark.url))"
               alt="favicon"
               loading="lazy"
               width="20"
@@ -83,7 +83,7 @@ const folders = computed(
   () => props.node.children?.filter((n: BookmarkTreeNode) => !n.url) ?? []
 );
 
-function getFaviconUrl(url: string) {
+const getFaviconUrl = (url: string) => {
   try {
     const { hostname } = new URL(url);
     return `https://www.google.com/s2/favicons?domain=${hostname}&sz=32`;
@@ -92,13 +92,14 @@ function getFaviconUrl(url: string) {
   }
 }
 
-function handleEditClick(bookmark: BookmarkTreeNode) {
+const handleEditClick = (bookmark: BookmarkTreeNode) => {
   emit("edit-bookmark", {
     id: bookmark.id,
     title: bookmark.title || "",
     url: bookmark.url || "",
+    iconUrl: bookmark.iconUrl || "",
   });
-}
+};
 </script>
 
 <style scoped>
