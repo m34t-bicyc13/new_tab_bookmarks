@@ -1,6 +1,6 @@
 <template>
-  <div class="_search_container">
-    <div class="_title">Google</div>
+  <NCard class="_search_container">
+    <NH1 class="_title">Google</NH1>
     <NInput
       class="_search_input"
       placeholder="Поиск в Google..."
@@ -8,12 +8,12 @@
       v-model:value="searchQuery"
       @keyup.enter="performSearch"
     />
-  </div>
+  </NCard>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { NInput } from "naive-ui";
+import { NInput, NH1, NCard } from "naive-ui";
 
 const searchQuery = ref<string>("");
 
@@ -25,24 +25,4 @@ const performSearch = () => {
 };
 </script>
 
-<style scoped>
-._search_container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
-}
-
-._title {
-  font-size: 100px;
-  color: #8b99b1;
-}
-
-._search_input {
-  width: 50em;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 100px;
-  font-size: 16px;
-}
-</style>
+<style scoped></style>

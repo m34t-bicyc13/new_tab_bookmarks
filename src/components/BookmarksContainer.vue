@@ -1,8 +1,8 @@
 ﻿<template>
-  <div v-if="bookmarksData" class="_bookmarks_container">
-    <div class="_edit_mode_control">
+  <NCard v-if="bookmarksData" class="_bookmarks_container">
+    <NCard class="_edit_mode_control">
       <NButton @click="toggleEditMode" type="primary" circle>✎</NButton>
-    </div>
+    </NCard>
 
     <BookmarkNode
       v-for="node in bookmarksData"
@@ -20,7 +20,7 @@
       @save="handleSaveBookmark"
       @cancel="showEditModal = false"
     />
-  </div>
+  </NCard>
 
   <NAlert v-else-if="errorMessage" type="error">
     {{ errorMessage }}
@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { NSpin, NAlert, NButton } from "naive-ui";
+import { NSpin, NAlert, NButton, NCard } from "naive-ui";
 import BookmarkNode from "./BookmarkNode.vue";
 import EditBookmarkModal from "./EditBookmarkModal.vue";
 import type { BookmarkTreeNode, BookmarkEdit } from "../types/commonTypes";
@@ -82,20 +82,4 @@ const updateBookmarkInTree = (
 };
 </script>
 
-<style scoped>
-._edit_mode_control {
-  position: fixed;
-  right: 32px;
-  bottom: 32px;
-  width: 56px;
-  height: 56px;
-  font-size: 28px;
-  cursor: pointer;
-  transform: scaleX(-1);
-}
-
-._bookmarks_container {
-  position: relative;
-  padding-bottom: 60px;
-}
-</style>
+<style scoped></style>

@@ -1,16 +1,16 @@
 ﻿<template>
-  <div v-if="isTargetFolder" class="_folder">
-    <div class="_folder_title">{{ node.title }}</div>
+  <NCard v-if="isTargetFolder" class="_folder">
+    <NH2 class="_folder_title">{{ node.title }}</NH2>
 
     <!-- Сначала отрисовываем ссылки -->
-    <div v-if="bookmarks.length" class="_bookmark_grid">
+    <NCard v-if="bookmarks.length" class="_bookmark_grid">
       <BookmarkCard
         v-for="bookmark in bookmarks"
         :bookmark="bookmark"
         :editMode="editMode"
         :handleEditClick="handleEditClick"
       />
-    </div>
+    </NCard>
 
     <!-- Затем вложенные папки -->
     <BookmarkNode
@@ -20,7 +20,7 @@
       :editMode="editMode"
       @edit-bookmark="$emit('edit-bookmark', $event)"
     />
-  </div>
+  </NCard>
   <!-- Продолжаем рекурсивный поиск -->
   <BookmarkNode
     v-else-if="folders.length"
@@ -37,6 +37,7 @@
 import { computed } from "vue";
 import type { BookmarkTreeNode } from "../types/commonTypes";
 import BookmarkCard from "./BookmarkCard.vue";
+import { NCard, NH2 } from "naive-ui";
 
 const props = defineProps<{
   node: BookmarkTreeNode;
@@ -68,39 +69,4 @@ const handleEditClick = (bookmark: BookmarkTreeNode) => {
 };
 </script>
 
-<style scoped>
-._folder:first-child {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 15px;
-  border: #455673 1px solid;
-  border-radius: 30px;
-  box-shadow: 0 0 15px 1px #00000045;
-}
-
-._folder {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 15px;
-  border: #455673 1px solid;
-  border-radius: 25px;
-  box-shadow: 0 0 15px 1px #00000045;
-}
-
-._folder_title {
-  font-size: 20px;
-  font-weight: bold;
-  color: #455673;
-}
-
-._bookmark_grid {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-
-</style>
+<style scoped></style>

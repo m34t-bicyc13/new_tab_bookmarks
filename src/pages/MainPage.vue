@@ -1,22 +1,14 @@
 ﻿<template>
-  <div class="_main_container">
+  <NCard class="_main_container">
     <Search />
     <BookmarksContainer />
-  </div>
+  </NCard>
 </template>
 
 <script setup lang="ts">
 import Search from "../components/Search.vue";
 import BookmarksContainer from "../components/BookmarksContainer.vue";
+import { NCard } from "naive-ui";
 </script>
 
-<style scoped>
-._main_container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 50px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-</style>
+<style scoped></style>
