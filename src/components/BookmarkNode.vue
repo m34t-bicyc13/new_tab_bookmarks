@@ -1,25 +1,27 @@
 ﻿<template>
-  <NCard v-if="isTargetFolder" class="_folder">
-    <NH2 class="_folder_title">{{ node.title }}</NH2>
+  <NCard v-if="isTargetFolder">
+    <div class="_folder">
+      <NText class="_folder_title">{{ node.title }}</NText>
 
-    <!-- Сначала отрисовываем ссылки -->
-    <NCard v-if="bookmarks.length" class="_bookmark_grid">
-      <BookmarkCard
-        v-for="bookmark in bookmarks"
-        :bookmark="bookmark"
+      <!-- Сначала отрисовываем ссылки -->
+      <div v-if="bookmarks.length" class="_bookmark_grid">
+        <BookmarkCard
+          v-for="bookmark in bookmarks"
+          :bookmark="bookmark"
+          :editMode="editMode"
+          :handleEditClick="handleEditClick"
+        />
+      </div>
+
+      <!-- Затем вложенные папки -->
+      <BookmarkNode
+        v-for="child in folders"
+        :key="child.id"
+        :node="child"
         :editMode="editMode"
-        :handleEditClick="handleEditClick"
+        @edit-bookmark="$emit('edit-bookmark', $event)"
       />
-    </NCard>
-
-    <!-- Затем вложенные папки -->
-    <BookmarkNode
-      v-for="child in folders"
-      :key="child.id"
-      :node="child"
-      :editMode="editMode"
-      @edit-bookmark="$emit('edit-bookmark', $event)"
-    />
+    </div>
   </NCard>
   <!-- Продолжаем рекурсивный поиск -->
   <BookmarkNode
@@ -37,7 +39,7 @@
 import { computed } from "vue";
 import type { BookmarkTreeNode } from "../types/commonTypes";
 import BookmarkCard from "./BookmarkCard.vue";
-import { NCard, NH2 } from "naive-ui";
+import { NCard, NText } from "naive-ui";
 
 const props = defineProps<{
   node: BookmarkTreeNode;
@@ -69,4 +71,21 @@ const handleEditClick = (bookmark: BookmarkTreeNode) => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+._folder {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+._folder_title {
+  font-size: 24px;
+  line-height: normal;
+}
+
+._bookmark_grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+</style>

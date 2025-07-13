@@ -1,5 +1,5 @@
 ﻿<template>
-  <NCard class="_bookmark_wrapper" :key="bookmark.id">
+  <div class="_bookmark_wrapper" :key="bookmark.id">
     <NA class="_bookmark_card" :href="bookmark.url" rel="noopener noreferrer">
       <NImage
         class="_bookmark_icon"
@@ -9,7 +9,7 @@
         height="20"
         lazy
       />
-      <NH3>{{ bookmark.title }}</NH3>
+      <NText class="_bookmark_title">{{ bookmark.title }}</NText>
     </NA>
     <NButton
       v-if="editMode"
@@ -20,11 +20,11 @@
       @click="handleEditClick(bookmark)"
       >✎
     </NButton>
-  </NCard>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { NA, NButton, NCard, NH3, NImage } from "naive-ui";
+import { NA, NButton, NText, NImage } from "naive-ui";
 import type { BookmarkTreeNode } from "../types/commonTypes";
 import { getFaviconUrl } from "../utils/commonUtils";
 
@@ -35,4 +35,39 @@ defineProps<{
 }>();
 </script>
 
-<style scoped></style>
+<style scoped>
+._bookmark_wrapper {
+  position: relative;
+}
+
+._bookmark_card {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: max-content;
+  padding: 10px;
+  background-color: var(--n-color-modal);
+  border-radius: var(--n-border-radius);
+  text-decoration: none;
+}
+
+._bookmark_card:hover {
+  background-color: #63e2b72e;
+}
+
+._bookmark_icon {
+  background-color: var(--n-color-popover);
+  padding: 2px;
+  border-radius: 7px;
+}
+
+._bookmark_title {
+  font-size: 16px;
+}
+
+._bookmark_edit_button {
+  position: absolute;
+  bottom: 0;
+  right: -8px;
+}
+</style>
