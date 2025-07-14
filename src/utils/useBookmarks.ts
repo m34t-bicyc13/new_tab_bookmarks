@@ -40,24 +40,37 @@ export function useBookmarks() {
       (updatedNode) => {
         setCustomIcon(bookmark.url, bookmark.iconUrl ?? "", () => {
           callback({ ...updatedNode, iconUrl: bookmark.iconUrl });
+          if (bookmarksData.value) {
+            updateBookmarks(bookmarksData.value, customIcons.value, {
+              ...updatedNode,
+              iconUrl: bookmark.iconUrl,
+            });
+          }
         });
       }
     );
   };
 
-  // Функция для обновления закладок
   const updateBookmarks = (
-    bookmarks: BookmarkTreeNode[],
-    icons: { [key: string]: string }
+    nodes: BookmarkTreeNode[],
+    icons: { [key: string]: string },
+    updatedNode?: BookmarkTreeNode
   ) => {
-    bookmarks.forEach((bookmark) => {
-      if (bookmark.url && icons[bookmark.url]) {
-        bookmark.iconUrl = icons[bookmark.url];
+    for (let i = 0; i < nodes.length; i++) {
+      const node = nodes[i];
+
+      if (updatedNode && node.id === updatedNode.id) {
+        nodes[i] = { ...updatedNode };
       }
-      if (bookmark.children) {
-        updateBookmarks(bookmark.children, icons);
+
+      if (node.url && icons[node.url]) {
+        node.iconUrl = icons[node.url];
       }
-    });
+
+      if (node.children) {
+        updateBookmarks(node.children, icons, updatedNode);
+      }
+    }
   };
 
   onMounted(loadBookmarks);

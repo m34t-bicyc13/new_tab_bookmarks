@@ -38,7 +38,7 @@ import { ref } from "vue";
 import { NSpin, NAlert, NButton } from "naive-ui";
 import BookmarkNode from "./BookmarkNode.vue";
 import EditBookmarkModal from "./EditBookmarkModal.vue";
-import type { BookmarkTreeNode, BookmarkEdit } from "../types/commonTypes";
+import type { BookmarkEdit } from "../types/commonTypes";
 import { useBookmarks } from "../utils/useBookmarks";
 
 const { bookmarksData, errorMessage, saveBookmark } = useBookmarks();
@@ -62,27 +62,9 @@ const openEditModal = (bookmark: BookmarkEdit) => {
 };
 
 const handleSaveBookmark = (bookmark: BookmarkEdit) => {
-  saveBookmark(bookmark, (updatedNode) => {
-    updateBookmarkInTree(bookmarksData.value, updatedNode);
+  saveBookmark(bookmark, () => {
     showEditModal.value = false;
   });
-};
-
-const updateBookmarkInTree = (
-  nodes: BookmarkTreeNode[] | null,
-  updatedNode: BookmarkTreeNode
-) => {
-  if (!nodes) return;
-
-  for (let i = 0; i < nodes.length; i++) {
-    if (nodes[i].id === updatedNode.id) {
-      nodes[i] = { ...updatedNode };
-      return;
-    }
-    if (nodes[i].children) {
-      updateBookmarkInTree(nodes[i].children || null, updatedNode);
-    }
-  }
 };
 </script>
 
