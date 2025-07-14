@@ -4,24 +4,24 @@
 export const getCustomIcons = (
   callback: (icons: { [key: string]: string }) => void
 ) => {
-  chrome.storage.local.get({ customIcons: {} }, (result) => {
+  chrome.storage.sync.get({ customIcons: {} }, (result) => {
     callback(result.customIcons || {});
   });
 };
 
 // Сохранить кастомную иконку
 export const setCustomIcon = (
-  bookmarkId: string,
+  bookmarkUrl: string,
   iconUrl: string,
   callback: () => void
 ) => {
   getCustomIcons((customIcons) => {
     if (iconUrl) {
-      customIcons[bookmarkId] = iconUrl;
+      customIcons[bookmarkUrl] = iconUrl;
     } else {
-      delete customIcons[bookmarkId];
+      delete customIcons[bookmarkUrl];
     }
-    chrome.storage.local.set({ customIcons }, callback);
+    chrome.storage.sync.set({ customIcons }, callback);
   });
 };
 
@@ -41,8 +41,8 @@ export const updateBookmarksWithIcons = (
   icons: { [key: string]: string }
 ) => {
   bookmarks.forEach((bookmark) => {
-    if (icons[bookmark.id]) {
-      bookmark.iconUrl = icons[bookmark.id];
+    if (bookmark.url && icons[bookmark.url]) {
+      bookmark.iconUrl = icons[bookmark.url];
     }
     if (bookmark.children) {
       updateBookmarksWithIcons(bookmark.children, icons);

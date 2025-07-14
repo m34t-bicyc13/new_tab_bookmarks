@@ -42,7 +42,7 @@ export function useBookmarks() {
         url: bookmark.url,
       },
       (updatedNode) => {
-        setCustomIcon(bookmark.id, bookmark.iconUrl ?? "", () => {
+        setCustomIcon(bookmark.url, bookmark.iconUrl ?? "", () => {
           callback({ ...updatedNode, iconUrl: bookmark.iconUrl });
         });
       }
