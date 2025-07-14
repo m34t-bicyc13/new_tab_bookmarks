@@ -10,7 +10,12 @@
     />
 
     <div class="_edit_mode_control">
-      <NButton @click="toggleEditMode" type="primary" circle>✎</NButton>
+      <NButton
+        @click="toggleEditMode"
+        :type="editMode ? 'warning' : 'primary'"
+        circle
+        >✎</NButton
+      >
     </div>
     <EditBookmarkModal
       :bookmark="editingBookmark"
