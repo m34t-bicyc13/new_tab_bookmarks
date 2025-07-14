@@ -93,4 +93,8 @@ const updateBookmarkInTree = (
   flex-direction: row-reverse;
   margin-bottom: 20px;
 }
+
+._edit_mode_control button {
+  transform: scaleX(-1);
+}
 </style>

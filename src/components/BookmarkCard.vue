@@ -69,5 +69,6 @@ defineProps<{
   position: absolute;
   bottom: 0;
   right: -8px;
+  transform: scaleX(-1);
 }
 </style>

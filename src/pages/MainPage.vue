@@ -16,6 +16,7 @@ import BookmarksContainer from "../components/BookmarksContainer.vue";
   flex-direction: column;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 10px;
   gap: 50px;
 }
 </style>
