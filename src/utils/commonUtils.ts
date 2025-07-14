@@ -1,6 +1,4 @@
-﻿import type { BookmarkTreeNode } from "../types/commonTypes";
-
-// Получить кастомные иконки из storage
+﻿// Получить кастомные иконки из storage
 export const getCustomIcons = (
   callback: (icons: { [key: string]: string }) => void
 ) => {
@@ -33,19 +31,4 @@ export const getFaviconUrl = (url: string) => {
   } catch {
     return "";
   }
-}
-
-// Функция для обновления закладок иконками
-export const updateBookmarksWithIcons = (
-  bookmarks: BookmarkTreeNode[],
-  icons: { [key: string]: string }
-) => {
-  bookmarks.forEach((bookmark) => {
-    if (bookmark.url && icons[bookmark.url]) {
-      bookmark.iconUrl = icons[bookmark.url];
-    }
-    if (bookmark.children) {
-      updateBookmarksWithIcons(bookmark.children, icons);
-    }
-  });
 };

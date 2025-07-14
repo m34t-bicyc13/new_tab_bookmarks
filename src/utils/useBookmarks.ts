@@ -1,10 +1,6 @@
 ﻿import { ref, onMounted } from "vue";
 import type { BookmarkTreeNode, BookmarkEdit } from "../types/commonTypes";
-import {
-  getCustomIcons,
-  setCustomIcon,
-  updateBookmarksWithIcons,
-} from "../utils/commonUtils";
+import { getCustomIcons, setCustomIcon } from "../utils/commonUtils";
 
 export function useBookmarks() {
   const bookmarksData = ref<BookmarkTreeNode[] | null>(null);
@@ -19,7 +15,7 @@ export function useBookmarks() {
 
           getCustomIcons((icons) => {
             customIcons.value = icons;
-            updateBookmarksWithIcons(bookmarks, icons);
+            updateBookmarks(bookmarks, icons);
             bookmarksData.value = bookmarks;
           });
         } catch (e) {
@@ -49,6 +45,21 @@ export function useBookmarks() {
     );
   };
 
+  // Функция для обновления закладок
+  const updateBookmarks = (
+    bookmarks: BookmarkTreeNode[],
+    icons: { [key: string]: string }
+  ) => {
+    bookmarks.forEach((bookmark) => {
+      if (bookmark.url && icons[bookmark.url]) {
+        bookmark.iconUrl = icons[bookmark.url];
+      }
+      if (bookmark.children) {
+        updateBookmarks(bookmark.children, icons);
+      }
+    });
+  };
+
   onMounted(loadBookmarks);
 
   return {
@@ -57,5 +68,6 @@ export function useBookmarks() {
     customIcons,
     loadBookmarks,
     saveBookmark,
+    updateBookmarks,
   };
 }
