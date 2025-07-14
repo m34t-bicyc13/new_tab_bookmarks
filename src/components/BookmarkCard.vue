@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { NA, NButton, NText, NImage } from "naive-ui";
 import type { BookmarkTreeNode } from "../types/commonTypes";
-import { getFaviconUrl } from "../utils/commonUtils";
+import { getFaviconUrl } from "../utils/urlUtils";
 
 defineProps<{
   bookmark: BookmarkTreeNode;

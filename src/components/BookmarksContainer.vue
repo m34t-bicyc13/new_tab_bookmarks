@@ -39,7 +39,7 @@ import { NSpin, NAlert, NButton } from "naive-ui";
 import BookmarkNode from "./BookmarkNode.vue";
 import EditBookmarkModal from "./EditBookmarkModal.vue";
 import type { BookmarkEdit } from "../types/commonTypes";
-import { useBookmarks } from "../utils/useBookmarks";
+import { useBookmarks } from "../composables/useBookmarks";
 
 const { bookmarksData, errorMessage, saveBookmark } = useBookmarks();
 
@@ -62,9 +62,8 @@ const openEditModal = (bookmark: BookmarkEdit) => {
 };
 
 const handleSaveBookmark = (bookmark: BookmarkEdit) => {
-  saveBookmark(bookmark, () => {
-    showEditModal.value = false;
-  });
+  saveBookmark(bookmark);
+  showEditModal.value = false;
 };
 </script>
 

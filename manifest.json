@@ -4,9 +4,9 @@
   "version": "1.0",
   "key": "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCv2N81hnx6HMma0JKqLi8F7tNTuYUvmW6A1vI+ySJGbeiiFh3kE5AmyLVRYMsy1h2NmXNaM05AKkAScBsVRGqZsQcLOmQGWpj+nutQRN/b4gNBENKRxBxYW/RoTFF3l+yp4GpUuctDimJgympCn0chaJI2ZYykbhZoCJ0kD3lZTlSiElpsDeiO5iXHfm+KkczjCuqDiDhCRY6diNszoLMGwPG3NBkmSBjJjhAhgcINbwNcOBpOAaQzfXTYOyje+9TNSdhuSXj5w24KAM8Xq0CY/KOANk3t6363CyatHbWWAEBr17W8iC1AFGK8u4tN8fVgpfT8cWoHK40Bmy1Ci6RfAgMBAAECggEAKPUR9DUZTBXlbS40Yvfz0uVwClm1KEOL5e1qqe4OEipqW0pcdvGJi0cHWGd7nKEbbA44PGOjz7UnjEPZQwhW7eo6MkbM4l/6r5+TPnR0UZIgYOjKqtHrKjdsw1g3R2w23tBa49YMfnQ+er3apx7TIfhpycq4SdosVNngw/Pot0BwauayQwjeXAavZSjqGbt8T1/7lustUXidvhRHxqqAnWohfk3zSgaMUPGAWhDOhha6iynel1cSp+mBCcZMtZs5cpa/9Kx5PBVrFz+b1m74a3klLdfnUC6fGnI6E1vw3p8SPgoX/NCWtkPZFncrdcWaeeyXoa/EdUHve2QBv67PcQKBgQDtDmk0iWlkX038IfwSY1l1FmResyEN0FPfiyDQCT/n90gROOGa2aO4P96l/EuPL3ReDMmC6a3uJeSN+YPPTCxa1ZQQ7J8t7rj4+octdj7zLste41edF1d6QGZ6u2llPpNSJE1+u/XdPk+gj1wBRfOnUWOZ29lv5VjLU4oj9d6IEQKBgQC95kXAlcELpYS8IGJ8gQbrFYphRJIhBHB39ZXOOIlXMyXyOK6OTJx9MO2WgwJIYs8feLtdTV+LCTE1PGScWTqB9kxKE/Nux/I2QkVdAM+dLagatfU0AJUE1vQF4qCDDCIkn7L3wI46dW2pPfJrmfEAXAB6kXJu0urz+HRIztFVbwKBgQCr++eR6RugaZCPmyxhPtj5HLzHA9i4R+uB5FNy+zL1HS+Y5xaunLWuCBCFhgxfnoMjdM2B//1jKPSvmFXrwIzxfcCFotY9odNrN395GS/EiK+dcPzwiK27kRuIcY2emY6Saqoah01yLTHiAAA1IEYMnvzO9HTFPLR2F27Cdi/zsQKBgAr/EZz0Twhwnj4SlgFlq1PjnG7DfL7CtgyMQQ9/AJz3DkR3ecwtrYYmViu4DGLKrfnBkP/3Igg4EQxnIeBX3mZ2L7a+bwNEOsdfkQqwqFUOtsRNMxS+z+JG3DyXAfp0smlygfeMw++oqx/4wVfvwx/lM/XlBD5colRcV8d7im2rAoGALRpvNriNjVfvNpcMh4yOKJQUBI6eEiys6B05HlFs7R1RQH5u2t6UBxbR+U9SwHahj0HKzAT3Tny3QQm5sm7fhjDGttyMolLdqIl5AykNapBtZChaQhkbNGEKuJ/UqnZ26mNjrZhxBPoGt7Nuv0nIdOCcgZvBKWODawc6tyyT2jU=",
   "description": "Визуализация закладок в удобном виде",
-  "permissions": ["bookmarks", "storage"],
+  "permissions": ["bookmarks", "storage", "favicon"],
   "background": {
-    "service_worker": "src/service/background_service.js"
+    "service_worker": "src/background/background_service.js"
   },
   "chrome_url_overrides": {
     "newtab": "build/index.html"
