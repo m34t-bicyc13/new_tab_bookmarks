@@ -6,7 +6,7 @@
   "description": "Визуализация закладок в удобном виде",
   "permissions": ["bookmarks", "storage", "favicon"],
   "background": {
-    "service_worker": "src/background/background_service.js"
+    "service_worker": "background/background_service.js"
   },
   "chrome_url_overrides": {
     "newtab": "build/index.html"
