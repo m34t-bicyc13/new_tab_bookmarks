@@ -35,7 +35,14 @@ const performSearch = () => {
 }
 
 ._search_title {
-  font-size: 120px;
+  font-size: 100px;
+  line-height: normal;
+}
+
+@media screen and (max-height: 900px) {
+  ._search_title {
+    font-size: 60px;
+  }
 }
 
 ._search_input {

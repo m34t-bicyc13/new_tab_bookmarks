@@ -17,6 +17,6 @@ import BookmarksContainer from "../components/BookmarksContainer.vue";
   max-width: 1200px;
   margin: 0 auto;
   padding: 10px;
-  gap: 50px;
+  gap: 35px;
 }
 </style>
