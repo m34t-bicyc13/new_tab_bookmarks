@@ -49,6 +49,7 @@ const editingBookmark = ref<BookmarkEdit>({
   id: "",
   title: "",
   url: "",
+  altUrl: "",
   iconUrl: "",
 });
 

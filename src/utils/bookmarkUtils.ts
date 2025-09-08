@@ -1,19 +1,23 @@
 ﻿import type { BookmarkTreeNode } from "../types/commonTypes";
 
 /**
- * Рекурсивно применяет кастомные иконки к дереву закладок.
+ * Рекурсивно применяет кастомные иконки и альтернативные ссылки к дереву закладок.
  * Мутирует исходный массив.
  */
-export const applyCustomIconsToTree = (
+export const applyCustomDataToTree = (
   nodes: BookmarkTreeNode[],
-  icons: { [key: string]: string }
+  icons: { [key: string]: string },
+  altUrls: { [key: string]: string }
 ): void => {
   for (const node of nodes) {
     if (node.url && icons[node.url]) {
       node.iconUrl = icons[node.url];
     }
+    if (node.url && altUrls[node.url]) {
+      node.altUrl = altUrls[node.url];
+    }
     if (node.children) {
-      applyCustomIconsToTree(node.children, icons);
+      applyCustomDataToTree(node.children, icons, altUrls);
     }
   }
 };

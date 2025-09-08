@@ -1,6 +1,16 @@
 ﻿<template>
   <div class="_bookmark_wrapper" :key="bookmark.id">
-    <NA class="_bookmark_card" :href="bookmark.url" rel="noopener noreferrer">
+    <NA
+      class="_bookmark_card"
+      :href="bookmark.url"
+      rel="noopener noreferrer"
+      @mousedown="startHold"
+      @mouseup="cancelHold"
+      @mouseleave="cancelHold"
+      @touchstart="startHold"
+      @touchend="cancelHold"
+      @click="handleClick"
+    >
       <NImage
         class="_bookmark_icon"
         :src="bookmark.iconUrl || getFaviconUrl(String(bookmark.url))"
@@ -27,12 +37,40 @@
 import { NA, NButton, NText, NImage } from "naive-ui";
 import type { BookmarkTreeNode } from "../types/commonTypes";
 import { getFaviconUrl } from "../utils/urlUtils";
+import { ref } from "vue";
 
-defineProps<{
+const props = defineProps<{
   bookmark: BookmarkTreeNode;
   editMode?: boolean;
   handleEditClick: Function;
 }>();
+
+const holdTimeout = ref<number | null>(null);
+const holdTriggered = ref(false);
+const HOLD_DELAY = 500; // мс
+
+function startHold() {
+  if (!props.bookmark.altUrl) return;
+  holdTriggered.value = false;
+  holdTimeout.value = window.setTimeout(() => {
+    holdTriggered.value = true;
+    window.open(props.bookmark.altUrl, '_self');
+  }, HOLD_DELAY);
+}
+
+function cancelHold() {
+  if (holdTimeout.value) {
+    clearTimeout(holdTimeout.value);
+    holdTimeout.value = null;
+  }
+}
+
+function handleClick(e: MouseEvent) {
+  if (holdTriggered.value) {
+    e.preventDefault(); // отменить обычный переход, если был холд
+    holdTriggered.value = false;
+  }
+}
 </script>
 
 <style scoped>

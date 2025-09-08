@@ -54,7 +54,7 @@ const isTargetFolder = computed(() =>
 );
 
 const bookmarks = computed(
-  () => props.node.children?.filter((n: BookmarkTreeNode) => n.url) ?? []
+  () => props.node.children?.filter((n: BookmarkTreeNode) => n.url || n.altUrl) ?? []
 );
 
 const folders = computed(
@@ -66,6 +66,7 @@ const handleEditClick = (bookmark: BookmarkTreeNode) => {
     id: bookmark.id,
     title: bookmark.title || "",
     url: bookmark.url || "",
+    altUrl: bookmark.altUrl || "",
     iconUrl: bookmark.iconUrl || "",
   });
 };

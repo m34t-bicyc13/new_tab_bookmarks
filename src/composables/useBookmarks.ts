@@ -1,7 +1,7 @@
 ﻿import { ref, onMounted } from "vue";
 import type { BookmarkTreeNode, BookmarkEdit } from "../types/commonTypes";
 import * as chromeApi from "../services/chromeApi";
-import { applyCustomIconsToTree, findAndReplaceNode } from "../utils/bookmarkUtils";
+import { applyCustomDataToTree, findAndReplaceNode } from "../utils/bookmarkUtils";
 
 export function useBookmarks() {
   const bookmarksData = ref<BookmarkTreeNode[] | null>(null);
@@ -12,9 +12,10 @@ export function useBookmarks() {
     isLoading.value = true;
     errorMessage.value = "";
     try {
-      const [response, icons] = await Promise.all([
+      const [response, icons, altUrls] = await Promise.all([
         chromeApi.sendMessageAsync<{ data?: string }>({ action: "getBookmarks" }),
         chromeApi.getCustomIconsAsync(),
+        chromeApi.getCustomAltUrlsAsync(),
       ]);
 
       if (!response?.data) {
@@ -22,7 +23,7 @@ export function useBookmarks() {
       }
 
       const bookmarks: BookmarkTreeNode[] = JSON.parse(response.data);
-      applyCustomIconsToTree(bookmarks, icons); // Используем утилиту
+      applyCustomDataToTree(bookmarks, icons, altUrls); // Используем утилиту
       bookmarksData.value = bookmarks;
 
     } catch (e: any) {
@@ -41,15 +42,21 @@ export function useBookmarks() {
           url: bookmark.url,
         }),
         chromeApi.setCustomIconAsync(bookmark.url, bookmark.iconUrl ?? ""),
+        chromeApi.setCustomAltUrlAsync(bookmark.url, bookmark.altUrl ?? ""),
       ]);
 
-      const nodeWithIcon: BookmarkTreeNode = { ...updatedNode, iconUrl: bookmark.iconUrl };
+      // Добавляем altUrl в локальное дерево
+      const nodeWithCustomData: BookmarkTreeNode = {
+        ...updatedNode,
+        iconUrl: bookmark.iconUrl,
+        altUrl: bookmark.altUrl,
+      };
 
       if (bookmarksData.value) {
-        findAndReplaceNode(bookmarksData.value, nodeWithIcon); // Используем утилиту
+        findAndReplaceNode(bookmarksData.value, nodeWithCustomData); // Используем утилиту
       }
 
-      return nodeWithIcon;
+      return nodeWithCustomData;
 
     } catch (e: any) {
       errorMessage.value = "Ошибка при сохранении закладки.";
