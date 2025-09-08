@@ -17,7 +17,7 @@
             placeholder="https://example.com"
           />
         </NFormItem>
-        <NFormItem label="Альтернативная ссылка (по Ctrl/Shift)">
+        <NFormItem label="Альтернативная ссылка (по удержанию)">
           <NInput
             v-model:value="editingBookmark.altUrl"
             placeholder="https://alternative.com"
